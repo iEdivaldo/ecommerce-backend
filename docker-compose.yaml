@@ -1,0 +1,38 @@
+services:
+  flyway:
+    image: flyway/flyway
+    command: -url=jdbc:postgresql://postgres:5432/ecommerce -user=postgres -password=postgres -baselineOnMigrate=true migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
+  postgres:
+    image: postgres:16
+    container_name: ecommerce_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  #Se quiser rodar o Spring Boot via Docker, descomente abaixo:
+  app:
+    build: .
+    container_name: ecommerce_app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ecommerce
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
