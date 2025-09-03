@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/autenticacao")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class AutenticacaoController {
 
@@ -57,7 +57,7 @@ public class AutenticacaoController {
     }
 
     @PostMapping("/login")
-    public TokenResponse login(@Valid @RequestBody LoginRequest request) {
+    public Map<String, Object> login(@Valid @RequestBody LoginRequest request) {
         var autenticacaoToken = new UsernamePasswordAuthenticationToken(request.getEmail(), request.getSenha());
         authenticationManager.authenticate(autenticacaoToken);
 
@@ -65,7 +65,11 @@ public class AutenticacaoController {
         var acesso = tokenService.gerarAccessoToken(usuario.getEmail(), usuario.getPerfil().name());
         var refresh = tokenService.gerarRefreshToken(usuario.getEmail());
 
-        return new TokenResponse(acesso, refresh);
+        return Map.of(
+            "usuario", Map.of("id", usuario.getId(), "nome", usuario.getNome(), "email", usuario.getEmail(), "perfil", usuario.getPerfil()),
+            "tokens", new TokenResponse(acesso, refresh)
+        );
+        
     }
 
     @PostMapping("/atualizar-token")
