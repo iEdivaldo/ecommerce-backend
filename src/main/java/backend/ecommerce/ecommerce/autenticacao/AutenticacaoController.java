@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -70,6 +71,15 @@ public class AutenticacaoController {
             "tokens", new TokenResponse(acesso, refresh)
         );
         
+    }
+
+    @GetMapping("/logout")
+    public Map<String, Object> logout() {
+        // Implementar lógica de logout, se necessário
+        return Map.of(
+            "message", "Logout realizado com sucesso",
+            "tokens", new TokenResponse("", "")
+        );
     }
 
     @PostMapping("/atualizar-token")

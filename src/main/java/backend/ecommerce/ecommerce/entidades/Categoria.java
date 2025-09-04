@@ -10,13 +10,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
 @Entity @Table(name = "categorias")
 @Data @AllArgsConstructor 
 @Builder @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true) @NoArgsConstructor
 public class Categoria {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

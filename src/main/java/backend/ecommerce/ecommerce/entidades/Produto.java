@@ -14,10 +14,15 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity @Table(name = "produtos")
-@Data @AllArgsConstructor @Builder
+@Entity
+@Table(name = "produtos")
+@Data
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 public class Produto {
 
     @Id
@@ -35,16 +40,16 @@ public class Produto {
     @Column(nullable = false, unique = true)
     private String slugProduto;
 
-    @Column(columnDefinition = "text")
+    @Column(name = "descricao", columnDefinition = "text")
     private String descricaoProduto;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(name = "preco", nullable = false, precision = 12, scale = 2)
     private BigDecimal precoProduto;
 
     @Column(unique = true)
     private String codigoProduto;
 
-    @Column(nullable = false)
+    @Column(name = "estoque", nullable = false)
     @Builder.Default
     private Integer estoqueProduto = 0;
 

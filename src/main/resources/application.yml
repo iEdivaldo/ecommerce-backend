@@ -2,6 +2,8 @@ server:
   port: 8080
   error:
     include-message: always
+    include-stacktrace: ALWAYS
+    include-binding-errors: ALWAYS
 
 spring:
   flyway:
@@ -31,3 +33,5 @@ security:
 logging:
   level:
     root: DEBUG
+    org.springframework: DEBUG
+    org.hibernate: INFO

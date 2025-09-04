@@ -33,7 +33,7 @@ public class ConfigSeguranca {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(OPTIONS, "/**").permitAll()
                 .requestMatchers("/autenticacao/**", "/produtos/**", "/categorias/**", 
-                                "/docs/**", "/v3/api-docs/**").permitAll()
+                                "/docs/**", "/error/**", "/error", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/administracao/**").hasRole("ADMINISTRADOR")
                 .anyRequest().authenticated()

@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.ecommerce.ecommerce.entidades.Produto;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
+import lombok.RequiredArgsConstructor;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/produtos")
+@RequiredArgsConstructor
 public class CatalogoController {
 
     private final ProdutoRepositorio produtoRepositorio;
-    public CatalogoController(ProdutoRepositorio produtoRepositorio) {
-        this.produtoRepositorio = produtoRepositorio;
-    }
 
     @GetMapping
     public List<Produto> listarProdutos() {

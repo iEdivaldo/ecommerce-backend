@@ -1,6 +1,6 @@
 services:
   flyway:
-    image: flyway/flyway
+    image: flyway/flyway:10.14.0
     command: -url=jdbc:postgresql://postgres:5432/ecommerce -user=postgres -password=postgres -baselineOnMigrate=true migrate
     volumes:
       - ./src/main/resources/db/migration:/flyway/sql
