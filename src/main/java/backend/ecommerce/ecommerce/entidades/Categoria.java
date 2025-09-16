@@ -27,11 +27,4 @@ public class Categoria {
     @Column(nullable = false)
     @ToString.Include
     private String nome;
-
-    @Column(nullable = false, unique = true)
-    private String slug;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean produtoAtivo = true;
 }

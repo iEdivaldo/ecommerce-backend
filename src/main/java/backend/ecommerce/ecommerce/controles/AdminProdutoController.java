@@ -8,46 +8,75 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.ecommerce.ecommerce.entidades.Categoria;
 import backend.ecommerce.ecommerce.entidades.Produto;
+import backend.ecommerce.ecommerce.repositorios.CategoriaRepositorio;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
-@RequestMapping("/administracao/produtos")
+@RequestMapping("/administracao")
 @RequiredArgsConstructor
 public class AdminProdutoController {
 
     private final ProdutoRepositorio produtoRepositorio;
+    private final CategoriaRepositorio categoriaRepositorio;
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PostMapping
+    @PostMapping("/produtos")
     public void criarProduto(@RequestBody Produto produto) {
         produtoRepositorio.save(produto);
     }
-
+ 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @PostMapping("/{id}")
-    public void atualizarProduto(@PathVariable Long id, @RequestBody Produto produto) {
+    @PutMapping("/produtos/{id}")
+    public void atualizarProduto(@PathVariable("id") Long id, @RequestBody Produto produto) {
         produto.setId(id);
         // atualizar informacao como verificação se existe esse produto ou não...
         produtoRepositorio.save(produto);
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @DeleteMapping("/{id}")
-    public void deletarProduto(@PathVariable Long id) {
+    @DeleteMapping("/produtos/{id}")
+    public void deletarProduto(@PathVariable("id") Long id) {
         produtoRepositorio.deleteById(id);
     }
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
-    @GetMapping
+    @GetMapping("/produtos")
     public List<Produto> listarProdutos() {
         return produtoRepositorio.findAll();
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @GetMapping("/categorias")
+    public List<Categoria> listarCategorias() {
+        return categoriaRepositorio.findAll();
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PostMapping("/categorias")
+    public void criarCategoria(@RequestBody Categoria categoria) {
+        categoriaRepositorio.save(categoria);
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PutMapping("/categorias/{id}")
+    public void atualizarCategoria(@PathVariable("id") Long id, @RequestBody Categoria categoria) {
+        categoria.setId(id);
+        categoriaRepositorio.save(categoria);
+    }
+
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @DeleteMapping("/categorias/{id}")
+    public void deletarCategoria(@PathVariable("id") Long id) {
+        categoriaRepositorio.deleteById(id);
     }
 
 }

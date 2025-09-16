@@ -22,12 +22,12 @@ public class UsuarioService implements UserDetailsService  {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         var usuario = usuarioRepositorio.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com o email: " + email));
         
-        var autoridades = new SimpleGrantedAuthority(usuario.getPerfil().name());
+        var autoridades = new SimpleGrantedAuthority("ROLE_" + usuario.getPerfil().name());
 
         return User.withUsername(usuario.getEmail())
-        .password(usuario.getSenhaHash())
-        .authorities(List.of(autoridades))
-        .build();        
+            .password(usuario.getSenhaHash())
+            .authorities(List.of(autoridades))
+            .build();
     }
 
 }

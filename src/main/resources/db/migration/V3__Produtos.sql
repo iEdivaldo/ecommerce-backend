@@ -1,9 +1,16 @@
 INSERT INTO categorias (
-    nome, slug, produto_ativo)
+    nome)
     VALUES
-    ('Categoria 1', 'categoria-1', true),
-    ('Categoria 2', 'categoria-2', true),
-    ('Categoria 3', 'categoria-3', true);
+    ('Cozinha'),
+    ('Sala de Estar'),
+    ('Quartos'),
+    ('Escritório'),
+    ('Banheiro'),
+    ('Jardim'),
+    ('Decoração'),
+    ('Infantil'),
+    ('Eletrônicos'),
+    ('Eletrodomésticos');
 
 INSERT INTO produtos (
     categoria_id, nome_produto, slug_produto, descricao, 

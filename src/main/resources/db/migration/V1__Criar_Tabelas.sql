@@ -23,14 +23,12 @@ create table enderecos (
 );
 
 create table categorias (
-  id bigint primary key,
-  nome text not null,
-  slug text unique not null,
-  produto_ativo boolean not null default true
+  id bigint generated always as identity primary key,
+  nome text not null
 );
 
 create table produtos (
-  id bigint primary key,
+  id bigint generated always as identity primary key,
   categoria_id bigint references categorias(id),
   nome_produto text not null,
   slug_produto text unique not null,
