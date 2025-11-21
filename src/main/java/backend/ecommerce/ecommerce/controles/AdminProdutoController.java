@@ -17,6 +17,7 @@ import backend.ecommerce.ecommerce.entidades.Categoria;
 import backend.ecommerce.ecommerce.entidades.Produto;
 import backend.ecommerce.ecommerce.repositorios.CategoriaRepositorio;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -75,7 +76,14 @@ public class AdminProdutoController {
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @DeleteMapping("/categorias/{id}")
+    @Transactional
     public void deletarCategoria(@PathVariable("id") Long id) {
+        Categoria categoria = categoriaRepositorio.findById(id).orElseThrow();
+        List<Produto> produtos = produtoRepositorio.findByCategoriaId(categoria.getId());
+        for (Produto produto : produtos) {
+            produto.setCategoria(null);
+            produtoRepositorio.saveAndFlush(produto);
+        }
         categoriaRepositorio.deleteById(id);
     }
 

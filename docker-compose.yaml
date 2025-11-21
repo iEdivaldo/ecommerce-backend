@@ -6,6 +6,7 @@ services:
       - ./src/main/resources/db/migration:/flyway/sql
     depends_on:
       - postgres
+
   postgres:
     image: postgres:16
     container_name: ecommerce_postgres
@@ -19,7 +20,6 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  #Se quiser rodar o Spring Boot via Docker, descomente abaixo:
   app:
     build: .
     container_name: ecommerce_app
@@ -34,5 +34,19 @@ services:
     depends_on:
       - postgres
 
+  frontend:
+    image: node:22
+    container_name: ecommerce_frontend
+    working_dir: /app
+    volumes:
+      - ../ecommerce-frontend:/app:cached
+      - frontend_node_modules:/app/node_modules
+    ports:
+      - "4200:4200"
+    command: sh -c "npm ci && npm start"
+    depends_on:
+      - app
+
 volumes:
   pgdata:
+  frontend_node_modules:

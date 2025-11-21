@@ -30,7 +30,7 @@ public class Produto {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "categoria_id")
+    @JoinColumn(name = "categoria_id", nullable = true)
     @ToString.Exclude
     private Categoria categoria;
 
