@@ -37,7 +37,7 @@ public class AdminProdutoController {
     @PostMapping("/produtos")
     public void criarProduto(@RequestBody Produto produto) {
         String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
-        Usuario usuario = usuarioService.findByEmail(emailLogado);
+        Usuario usuario = usuarioService.buscarPorEmail(emailLogado);
 
         produto.setUsuarioCriacao(usuario);
         produtoRepositorio.save(produto);
@@ -63,7 +63,6 @@ public class AdminProdutoController {
         return produtoRepositorio.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     @GetMapping("/categorias")
     public List<Categoria> listarCategorias() {
         return categoriaRepositorio.findAll();
