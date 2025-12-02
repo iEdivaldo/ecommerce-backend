@@ -2,5 +2,6 @@ package backend.ecommerce.ecommerce.entidades;
 
 public enum Perfil {
     CLIENTE,
-    ADMINISTRADOR
+    ADMINISTRADOR,
+    SUPER_ADMIN
 }

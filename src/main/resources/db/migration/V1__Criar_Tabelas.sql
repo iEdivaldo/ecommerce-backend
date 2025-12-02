@@ -4,7 +4,7 @@ create table usuarios (
   nome text not null,
   email citext unique not null,
   senha_hash text not null,
-  perfil text not null check (perfil in ('CLIENTE','ADMINISTRADOR')),
+  perfil text not null check (perfil in ('CLIENTE','ADMINISTRADOR', 'SUPER_ADMIN')),
   criado_em timestamptz not null default now()
 );
 

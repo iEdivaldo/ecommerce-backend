@@ -35,8 +35,16 @@ public class UsuarioService implements UserDetailsService  {
         return usuarioRepositorio.existsByEmail(email);
     }
 
+    public List<Usuario> listarUsuarios() {
+        return usuarioRepositorio.findAll();
+    }
+
     public Usuario buscarPorEmail(String email) {
         return usuarioRepositorio.findByEmail(email).orElse(null);
+    }
+
+    public Usuario obterUsuarioPorId(Long id) {
+        return usuarioRepositorio.findById(id).orElse(null);
     }
 
     public void salvarUsuario(Usuario usuario) {

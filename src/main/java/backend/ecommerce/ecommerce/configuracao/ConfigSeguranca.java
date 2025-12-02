@@ -37,7 +37,8 @@ public class ConfigSeguranca {
                                 "/docs/**", "/error/**", "/error", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers(GET, "/administracao/categorias").permitAll()
-                .requestMatchers("/administracao/**").hasRole("ADMINISTRADOR")
+                .requestMatchers("/administracao/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
+                .requestMatchers("/super_admin/**").hasRole("SUPER_ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

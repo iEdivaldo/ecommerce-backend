@@ -34,7 +34,6 @@ public class ProdutosController {
     @GetMapping("/categoria/{categoriaId}")
     public ResponseEntity<List<Produto>> listarProdutosPorCategoria(@PathVariable("categoriaId") Long categoriaId) {
         List<Produto> produtos = produtoRepositorio.findByCategoriaId(categoriaId);
-        System.out.println("produtos: " + produtos);
         return ResponseEntity.ok(produtos);
     }
 }
