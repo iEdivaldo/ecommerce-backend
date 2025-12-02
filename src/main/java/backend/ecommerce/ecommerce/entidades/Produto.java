@@ -2,6 +2,8 @@ package backend.ecommerce.ecommerce.entidades;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -57,9 +59,10 @@ public class Produto {
     @Builder.Default
     private Boolean produtoAtivo = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_criacao_id")
     @ToString.Exclude
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "senhaHash"})
     private Usuario usuarioCriacao;
 
 }
