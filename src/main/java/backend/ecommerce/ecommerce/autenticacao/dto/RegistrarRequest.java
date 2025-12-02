@@ -8,6 +8,8 @@ import lombok.Data;
 @Data
 public class RegistrarRequest {
 
+    private Long id;
+
     @NotBlank
     private String nome;
 

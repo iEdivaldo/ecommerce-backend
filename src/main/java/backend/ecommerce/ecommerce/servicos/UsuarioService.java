@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import backend.ecommerce.ecommerce.autenticacao.dto.RegistrarRequest;
 import backend.ecommerce.ecommerce.entidades.Usuario;
 import backend.ecommerce.ecommerce.repositorios.UsuarioRepositorio;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,17 @@ public class UsuarioService implements UserDetailsService  {
         return usuarioRepositorio.findById(id).orElse(null);
     }
 
-    public void salvarUsuario(Usuario usuario) {
+    public void salvarUsuario(RegistrarRequest request) {
+        if (existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email já cadastrado");
+        }
+
+        var usuario = Usuario.builder()
+                .nome(request.getNome())
+                .email(request.getEmail())
+                .senhaHash(request.getSenha()) // A senha deve ser codificada no serviço
+                .perfil(request.getPerfil())
+                .build();
         usuarioRepositorio.save(usuario);
     }
 

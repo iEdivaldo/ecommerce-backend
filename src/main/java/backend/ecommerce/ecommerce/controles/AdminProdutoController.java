@@ -51,13 +51,13 @@ public class AdminProdutoController {
         produtoRepositorio.save(produto);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR', 'SUPER_ADMIN')")
     @DeleteMapping("/produtos/{id}")
     public void deletarProduto(@PathVariable("id") Long id) {
         produtoRepositorio.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('ADMINISTRADOR', 'SUPER_ADMIN')")
     @GetMapping("/produtos")
     public List<Produto> listarProdutos() {
         return produtoRepositorio.findAll();
@@ -68,20 +68,20 @@ public class AdminProdutoController {
         return categoriaRepositorio.findAll();
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/categorias")
     public void criarCategoria(@RequestBody Categoria categoria) {
         categoriaRepositorio.save(categoria);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PutMapping("/categorias/{id}")
     public void atualizarCategoria(@PathVariable("id") Long id, @RequestBody Categoria categoria) {
         categoria.setId(id);
         categoriaRepositorio.save(categoria);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/categorias/{id}")
     @Transactional
     public void deletarCategoria(@PathVariable("id") Long id) {
