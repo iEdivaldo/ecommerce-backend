@@ -3,6 +3,7 @@ package backend.ecommerce.ecommerce.controles;
 import java.util.List;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.ecommerce.ecommerce.entidades.Categoria;
 import backend.ecommerce.ecommerce.entidades.Produto;
+import backend.ecommerce.ecommerce.entidades.Usuario;
 import backend.ecommerce.ecommerce.repositorios.CategoriaRepositorio;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
+import backend.ecommerce.ecommerce.servicos.UsuarioService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -28,10 +31,15 @@ public class AdminProdutoController {
 
     private final ProdutoRepositorio produtoRepositorio;
     private final CategoriaRepositorio categoriaRepositorio;
+    private final UsuarioService usuarioService;
 
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PostMapping("/produtos")
     public void criarProduto(@RequestBody Produto produto) {
+        String emailLogado = SecurityContextHolder.getContext().getAuthentication().getName();
+        Usuario usuario = usuarioService.findByEmail(emailLogado);
+
+        produto.setUsuarioCriacao(usuario);
         produtoRepositorio.save(produto);
     }
  

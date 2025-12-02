@@ -15,11 +15,11 @@ INSERT INTO categorias (
 INSERT INTO produtos (
     categoria_id, nome_produto, slug_produto, descricao, 
     preco, codigo_produto, estoque, 
-    produto_ativo)
+    produto_ativo, usuario_criacao_id)
 VALUES
     (1, 'Produto 1', 'produto-1', 'Descrição do Produto 1', 
-    100.00, 'COD001', 10, true),
+    100.00, 'COD001', 10, true, 1),
     (2, 'Produto 2', 'produto-2', 'Descrição do Produto 2', 
-    200.00, 'COD002', 5, true),
+    200.00, 'COD002', 5, true, 1),
     (3, 'Produto 3', 'produto-3', 'Descrição do Produto 3', 
-    300.00, 'COD003', 0, true);
+    300.00, 'COD003', 0, true, 1);

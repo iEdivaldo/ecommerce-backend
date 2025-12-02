@@ -57,4 +57,9 @@ public class Produto {
     @Builder.Default
     private Boolean produtoAtivo = true;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_criacao_id")
+    @ToString.Exclude
+    private Usuario usuarioCriacao;
+
 }

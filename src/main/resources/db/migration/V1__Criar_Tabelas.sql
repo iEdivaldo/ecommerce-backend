@@ -36,7 +36,8 @@ create table produtos (
   preco numeric(12,2) not null,
   codigo_produto text unique,
   estoque int not null default 0,
-  produto_ativo boolean not null default true
+  produto_ativo boolean not null default true,
+  usuario_criacao bigint references usuarios(id)
 );
 
 create table carrinhos (
