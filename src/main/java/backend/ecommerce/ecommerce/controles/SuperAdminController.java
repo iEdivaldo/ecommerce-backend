@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import backend.ecommerce.ecommerce.autenticacao.dto.RegistrarRequest;
 import backend.ecommerce.ecommerce.autenticacao.dto.TokenResponse;
 import backend.ecommerce.ecommerce.entidades.Usuario;
+import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
 import backend.ecommerce.ecommerce.servicos.TokenService;
 import backend.ecommerce.ecommerce.servicos.UsuarioService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -33,7 +34,8 @@ public class SuperAdminController {
     private final UsuarioService usuarioService;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
-
+    private final ProdutoRepositorio produtoRepositorio;
+    
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/usuarios")
     public List<Usuario> listarUsuarios() {
@@ -61,15 +63,10 @@ public class SuperAdminController {
     }
 
     @PreAuthorize("hasRole('SUPER_ADMIN')")
-    @PutMapping("/usuario/{id}")
-    public void atualizarUsuario(@PathVariable("id") Long id, @Valid @RequestBody RegistrarRequest request) {
-        request.setId(id);
-        usuarioService.salvarUsuario(request);
-    }
-
-    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/usuario/{id}")
+    @Transactional
     public void deletarUsuario(@PathVariable("id") Long id) {
+        produtoRepositorio.deleteByUsuarioCriacaoId(id);
         usuarioService.deletarUsuarioPorId(id);
     }
     

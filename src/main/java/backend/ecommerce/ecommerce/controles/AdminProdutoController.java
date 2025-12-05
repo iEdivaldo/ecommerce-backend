@@ -42,6 +42,12 @@ public class AdminProdutoController {
         produto.setUsuarioCriacao(usuario);
         produtoRepositorio.save(produto);
     }
+
+    @PreAuthorize("hasRole('SUPER_ADMIN') or hasRole('ADMINISTRADOR')")
+    @GetMapping("/produtos/usuario/{usuarioId}")
+    public List<Produto> listarProdutosPorUsuario(@PathVariable("usuarioId") Long usuarioId) {
+        return produtoRepositorio.findByUsuarioCriacaoId(usuarioId);
+    }
  
     @PreAuthorize("hasRole('ADMINISTRADOR')")
     @PutMapping("/produtos/{id}")
@@ -51,13 +57,13 @@ public class AdminProdutoController {
         produtoRepositorio.save(produto);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR', 'SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('SUPER_ADMIN')")
     @DeleteMapping("/produtos/{id}")
     public void deletarProduto(@PathVariable("id") Long id) {
         produtoRepositorio.deleteById(id);
     }
 
-    @PreAuthorize("hasRole('ADMINISTRADOR', 'SUPER_ADMIN')")
+    @PreAuthorize("hasRole('ADMINISTRADOR') or hasRole('SUPER_ADMIN')")
     @GetMapping("/produtos")
     public List<Produto> listarProdutos() {
         return produtoRepositorio.findAll();
