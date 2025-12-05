@@ -39,6 +39,7 @@ public class ConfigSeguranca {
                 .requestMatchers(GET, "/administracao/categorias").permitAll()
                 .requestMatchers("/administracao/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
                 .requestMatchers("/super_admin/**").hasRole("SUPER_ADMIN")
+                                .requestMatchers("/notificacoes/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

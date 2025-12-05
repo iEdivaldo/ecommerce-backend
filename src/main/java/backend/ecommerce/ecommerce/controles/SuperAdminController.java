@@ -16,8 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.ecommerce.ecommerce.autenticacao.dto.RegistrarRequest;
 import backend.ecommerce.ecommerce.autenticacao.dto.TokenResponse;
+import backend.ecommerce.ecommerce.entidades.Produto;
+import backend.ecommerce.ecommerce.entidades.TipoNotificacao;
 import backend.ecommerce.ecommerce.entidades.Usuario;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
+import backend.ecommerce.ecommerce.servicos.NotificacaoService;
 import backend.ecommerce.ecommerce.servicos.TokenService;
 import backend.ecommerce.ecommerce.servicos.UsuarioService;
 import jakarta.transaction.Transactional;
@@ -35,6 +38,7 @@ public class SuperAdminController {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final ProdutoRepositorio produtoRepositorio;
+    private final NotificacaoService notificacaoService;
     
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping("/usuarios")
@@ -70,5 +74,26 @@ public class SuperAdminController {
         usuarioService.deletarUsuarioPorId(id);
     }
     
-
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
+    @DeleteMapping("/produto/{id}")
+    @Transactional
+    public void excluirProdutoComJustificativa(@PathVariable Long id, @RequestBody Map<String, String> body) {
+        String justificativa = body.get("justificativa");
+        
+        Produto produto = produtoRepositorio.findById(id).orElseThrow();
+        Usuario vendedor = produto.getUsuarioCriacao();
+        
+        // Criar notificação para o vendedor
+        String titulo = "Produto Excluído";
+        String mensagem = String.format(
+            "Seu produto '%s' foi excluído pelo administrador.\n\nMotivo: %s",
+            produto.getNomeProduto(),
+            justificativa
+        );
+        
+        notificacaoService.criarNotificacao(vendedor, titulo, mensagem, TipoNotificacao.PRODUTO_EXCLUIDO);
+        
+        // Excluir o produto
+        produtoRepositorio.deleteById(id);
+    }
 }
