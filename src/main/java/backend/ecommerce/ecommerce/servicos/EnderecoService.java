@@ -1,17 +1,15 @@
 package backend.ecommerce.ecommerce.servicos;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import backend.ecommerce.ecommerce.autenticacao.dto.EnderecoRequest;
 import backend.ecommerce.ecommerce.autenticacao.dto.EnderecoResponse;
 import backend.ecommerce.ecommerce.entidades.Endereco;
 import backend.ecommerce.ecommerce.entidades.Usuario;
 import backend.ecommerce.ecommerce.repositorios.EnderecoRepositorio;
-import backend.ecommerce.ecommerce.repositorios.UsuarioRepositorio;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -19,75 +17,63 @@ import lombok.RequiredArgsConstructor;
 public class EnderecoService {
 
     private final EnderecoRepositorio enderecoRepositorio;
-    private final UsuarioRepositorio usuarioRepositorio;
 
-    @Transactional(readOnly = true)
-    public List<EnderecoResponse> listarEnderecosPorUsuario(String email) {
-        var usuario = usuarioRepositorio.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-            return enderecoRepositorio.findByUsuario(usuario.getId()).stream().map(this::toResp).toList();
+    public List<EnderecoResponse> listarEnderecosPorUsuario(Usuario usuario) {
+        List<Endereco> enderecos = enderecoRepositorio.findByUsuarioId(usuario.getId());
+        return enderecos.stream()
+                .map(this::converterParaResponse)
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public EnderecoResponse criarEndereco(String email, EnderecoRequest req) {
-        var usuario = usuarioRepositorio.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
-        
-        if (Boolean.TRUE.equals(req.isPadrao())){
-            enderecoRepositorio.desmarcarEnderecoPadrao(usuario.getId());
+    public Endereco criarEndereco(Endereco endereco, Usuario usuario) {
+        endereco.setUsuario(usuario);
+        return enderecoRepositorio.save(endereco);
+    }
+
+    @Transactional
+    public Endereco atualizarEndereco(Long id, Endereco enderecoAtualizado, Usuario usuario) {
+        Endereco enderecoExistente = enderecoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+
+        if (!enderecoExistente.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Acesso negado ao atualizar este endereço");
         }
 
-        var endereco = Endereco.builder()
-        .usuario(usuario)
-        .logradouro(req.getLogradouro())
-        .numero(req.getNumero())
-        .complemento(req.getComplemento())
-        .bairro(req.getBairro())
-        .cidade(req.getCidade())
-        .estado(req.getEstado())
-        .cep(req.getCep())
-        .pais(req.getPais())
-        .padrao(req.isPadrao())
-        .build();
+        enderecoExistente.setLogradouro(enderecoAtualizado.getLogradouro());
+        enderecoExistente.setNumero(enderecoAtualizado.getNumero());
+        enderecoExistente.setComplemento(enderecoAtualizado.getComplemento());
+        enderecoExistente.setBairro(enderecoAtualizado.getBairro());
+        enderecoExistente.setCidade(enderecoAtualizado.getCidade());
+        enderecoExistente.setEstado(enderecoAtualizado.getEstado());
+        enderecoExistente.setCep(enderecoAtualizado.getCep());
 
-        return toResp(enderecoRepositorio.save(endereco));
+        return enderecoRepositorio.save(enderecoExistente);
     }
 
     @Transactional
-    public EnderecoResponse atualizarEndereco(String email, Long id, EnderecoRequest req) {
-        var endereco = buscarDoUsuarioOuError(email, id);
+    public void deletarEndereco(Long id, Usuario usuario) {
+        Endereco enderecoExistente = enderecoRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
 
-        if (Boolean.TRUE.equals(req.isPadrao())){
-            enderecoRepositorio.desmarcarEnderecoPadrao(endereco.getUsuario().getId());
-            endereco.setPadrao(true);
-        } else {
-            endereco.setPadrao(false);
+        if (!enderecoExistente.getUsuario().getId().equals(usuario.getId())) {
+            throw new RuntimeException("Acesso negado ao deletar este endereço");
         }
 
-        endereco.setLogradouro(req.getLogradouro());
-        endereco.setNumero(req.getNumero());
-        endereco.setComplemento(req.getComplemento());
-        endereco.setBairro(req.getBairro());
-        endereco.setCidade(req.getCidade());
-        endereco.setEstado(req.getEstado());
-        endereco.setCep(req.getCep());
-        endereco.setPais(req.getPais());
-
-        return toResp(endereco);
+        enderecoRepositorio.delete(enderecoExistente);
     }
 
-    @Transactional
-    public void removerEndereco(String email, Long id) {
-        var endereco = buscarDoUsuarioOuError(email, id);
-        enderecoRepositorio.delete(endereco);
-    }
-
-    private Endereco buscarDoUsuarioOuError(String email, Long id) {
-        Usuario usuario = usuarioRepositorio.findByEmail(email).orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
-        return enderecoRepositorio.findById(id).filter(endereco -> endereco.getUsuario().getId().equals(usuario.getId())).orElseThrow(() -> new EntityNotFoundException("Endereço não encontrado para o usuário"));
-    }
-
-    private EnderecoResponse toResp (Endereco endereco) {
-        return new EnderecoResponse(endereco.getId(), endereco.getLogradouro(), endereco.getNumero(), endereco.getComplemento(), endereco.getBairro(),
-        endereco.getCidade(), endereco.getEstado(), endereco.getCep(), endereco.getPais(), endereco.getUsuario().getId(), endereco.getPadrao());
+    private EnderecoResponse converterParaResponse(Endereco endereco) {
+        return EnderecoResponse.builder()
+                .id(endereco.getId())
+                .logradouro(endereco.getLogradouro())
+                .numero(endereco.getNumero())
+                .complemento(endereco.getComplemento())
+                .bairro(endereco.getBairro())
+                .cidade(endereco.getCidade())
+                .estado(endereco.getEstado())
+                .cep(endereco.getCep())
+                .build();
     }
 
 }

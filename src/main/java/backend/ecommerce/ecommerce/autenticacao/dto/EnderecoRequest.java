@@ -26,7 +26,4 @@ public class EnderecoRequest {
 
     @NotBlank
     private String pais;
-    
-    private boolean padrao = false;
-
 }

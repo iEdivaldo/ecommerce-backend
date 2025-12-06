@@ -8,62 +8,58 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter @Setter
-@AllArgsConstructor @Builder @NoArgsConstructor
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity @Table(name = "enderecos",
-  indexes = {
-    @Index(name = "ix_enderecos_usuario", columnList = "usuario_id")
-})
+@Entity
+@Table(name = "enderecos")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Endereco {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", nullable = false)
-    @ToString.Exclude
     @JsonIgnore
     private Usuario usuario;
 
+    @NotBlank(message = "Logradouro é obrigatório")
     @Column(nullable = false)
     private String logradouro;
 
-    @Column
+    @NotBlank(message = "Número é obrigatório")
+    @Column(nullable = false)
     private String numero;
 
     @Column
     private String complemento;
 
-    @Column
+    @NotBlank(message = "Bairro é obrigatório")
+    @Column(nullable = false)
     private String bairro;
 
+    @NotBlank(message = "Cidade é obrigatória")
     @Column(nullable = false)
     private String cidade;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Estado é obrigatório")
+    @Size(min = 2, max = 2, message = "Estado deve ter 2 caracteres")
+    @Column(nullable = false, length = 2)
     private String estado;
 
+    @NotBlank(message = "CEP é obrigatório")
     @Column(nullable = false)
     private String cep;
-
-    @Column(nullable = false)
-    private String pais;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean padrao = false;
 }

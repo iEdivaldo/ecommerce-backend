@@ -50,7 +50,7 @@ public class Usuario {
     private Instant criadoEm = Instant.now();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
+    @JsonIgnore
     private List<Endereco> enderecos = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")

@@ -2,6 +2,8 @@ package backend.ecommerce.ecommerce.entidades;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,11 +15,11 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 
 @Entity @Table(name = "item_pedido")
 @Data @AllArgsConstructor
-@Builder
+@Builder @NoArgsConstructor
 public class ItemPedido {
 
     @Id
@@ -26,12 +28,12 @@ public class ItemPedido {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pedido_id")
-    @ToString.Exclude
+    @JsonIgnoreProperties({"itens", "usuario", "endereco", "cliente"})
     private Pedido pedido;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "produto_id")
-    @ToString.Exclude
+    @JsonIgnoreProperties({"itensPedido"})
     private Produto produto;
 
     @Column(nullable = false)

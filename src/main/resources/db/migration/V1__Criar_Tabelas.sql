@@ -8,18 +8,17 @@ create table usuarios (
   criado_em timestamptz not null default now()
 );
 
-create table enderecos (
-  id bigint generated always as identity primary key,
-  usuario_id bigint references usuarios(id) on delete cascade,
-  logradouro text not null,
-  numero text,
-  complemento text,
-  bairro text,
-  cidade text not null,
-  estado text not null,
-  cep text not null,
-  pais text not null,
-  padrao boolean not null default false
+CREATE TABLE IF NOT EXISTS enderecos (
+    id BIGSERIAL PRIMARY KEY,
+    usuario_id BIGINT NOT NULL,
+    logradouro VARCHAR(255) NOT NULL,
+    numero VARCHAR(20) NOT NULL,
+    complemento VARCHAR(100),
+    bairro VARCHAR(100) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    estado VARCHAR(2) NOT NULL,
+    cep VARCHAR(10) NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 create table categorias (
@@ -55,22 +54,30 @@ create table itens_carrinho (
   preco_unitario numeric(12,2) not null
 );
 
-create table pedidos (
-  id bigint generated always as identity primary key,
-  usuario_id bigint references usuarios(id),
-  endereco_id bigint references enderecos(id),
-  status text not null check (status in ('CRIADO','PAGO','ENVIADO','ENTREGUE','CANCELADO')),
-  subtotal numeric(12,2) not null,
-  frete numeric(12,2) not null,
-  total numeric(12,2) not null,
-  status_pagamento text not null check (status_pagamento in ('PENDENTE','APROVADO','RECUSADO')) default 'PENDENTE',
-  criado_em timestamptz not null default now()
+CREATE TABLE IF NOT EXISTS pedidos (
+    id BIGSERIAL PRIMARY KEY,
+    cliente_id BIGINT NOT NULL,
+    endereco_id BIGINT NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'CRIADO',
+    metodo_pagamento VARCHAR(50) NOT NULL,
+    sub_total DECIMAL(12, 2) NOT NULL,
+    frete DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
+    total DECIMAL(12, 2) NOT NULL,
+    criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    pago_em TIMESTAMP,
+    enviado_em TIMESTAMP,
+    entregue_em TIMESTAMP,
+    cancelado_em TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES usuarios(id),
+    FOREIGN KEY (endereco_id) REFERENCES enderecos(id)
 );
 
-create table itens_pedido (
-  id bigint generated always as identity primary key,
-  pedido_id bigint references pedidos(id) on delete cascade,
-  produto_id bigint references produtos(id),
-  quantidade int not null check (quantidade > 0),
-  preco_unitario numeric(12,2) not null
+CREATE TABLE IF NOT EXISTS itens_pedido (
+    id BIGSERIAL PRIMARY KEY,
+    pedido_id BIGINT NOT NULL,
+    produto_id BIGINT NOT NULL,
+    quantidade INTEGER NOT NULL,
+    preco_unitario DECIMAL(12, 2) NOT NULL,
+    FOREIGN KEY (pedido_id) REFERENCES pedidos(id) ON DELETE CASCADE,
+    FOREIGN KEY (produto_id) REFERENCES produtos(id)
 );

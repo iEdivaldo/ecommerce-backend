@@ -2,7 +2,6 @@ package backend.ecommerce.ecommerce.configuracao;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.OPTIONS;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -33,13 +32,14 @@ public class ConfigSeguranca {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(OPTIONS, "/**").permitAll()
-                .requestMatchers("/autenticacao/**", "/produtos/**", "/categorias/**", 
+                .requestMatchers("/autenticacao/**", "/produtos/**", 
                                 "/docs/**", "/error/**", "/error", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
-                .requestMatchers(GET, "/administracao/categorias").permitAll()
                 .requestMatchers("/administracao/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
                 .requestMatchers("/super_admin/**").hasRole("SUPER_ADMIN")
-                                .requestMatchers("/notificacoes/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
+                .requestMatchers("/notificacoes/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
+                .requestMatchers("/enderecos/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
+                .requestMatchers("/pedidos/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
