@@ -31,6 +31,8 @@ services:
       DB_PASSWORD: postgres
     ports:
       - "8080:8080"
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       - postgres
 
@@ -50,3 +52,4 @@ services:
 volumes:
   pgdata:
   frontend_node_modules:
+  uploads_data:

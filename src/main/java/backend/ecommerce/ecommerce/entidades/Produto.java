@@ -59,6 +59,9 @@ public class Produto {
     @Builder.Default
     private Boolean produtoAtivo = true;
 
+    @Column(name = "imagem_url")
+    private String imagemUrl;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_criacao_id")
     @ToString.Exclude

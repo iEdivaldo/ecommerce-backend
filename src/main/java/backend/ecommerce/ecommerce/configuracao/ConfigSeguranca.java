@@ -35,6 +35,8 @@ public class ConfigSeguranca {
                 .requestMatchers("/autenticacao/**", "/produtos/**", "/categorias/**", 
                                 "/docs/**", "/error/**", "/error", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers("/upload/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
                 .requestMatchers("/administracao/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
                 .requestMatchers("/super_admin/**").hasRole("SUPER_ADMIN")
                 .requestMatchers("/notificacoes/**").hasAnyRole("CLIENTE", "ADMINISTRADOR", "SUPER_ADMIN")
