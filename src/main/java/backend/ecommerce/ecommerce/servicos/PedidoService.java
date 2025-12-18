@@ -157,6 +157,11 @@ public class PedidoService {
         Pedido pedido = pedidoRepositorio.findById(pedidoId)
             .orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
 
+        if (pedido.getStatus() == StatusPedido.CANCELADO || pedido.getStatus() == StatusPedido.ENTREGUE) {
+            throw new RuntimeException("Não é possível atualizar o status de um pedido cancelado ou entregue");
+        }
+        
+
         // Verificar seo vendedor tem produtos neste pedido
         boolean hasProdutosDoVendedor = pedido.getItens().stream()
             .anyMatch(item -> item.getProduto().getUsuarioCriacao() != null &&
@@ -167,6 +172,14 @@ public class PedidoService {
         }
 
         StatusPedido statusAnterior = pedido.getStatus();
+        
+        if (statusAnterior == StatusPedido.ENTREGUE && novoStatus == StatusPedido.CANCELADO) {
+            throw new RuntimeException("Não é possível cancelar um pedido já entregue");
+        }
+        if (statusAnterior == StatusPedido.CANCELADO && novoStatus == StatusPedido.ENTREGUE) {
+            throw new RuntimeException("Não é possível entregar um pedido cancelado");
+        }
+        
         pedido.setStatus(novoStatus);
 
         switch (novoStatus) {

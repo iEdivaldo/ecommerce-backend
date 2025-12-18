@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import backend.ecommerce.ecommerce.entidades.Categoria;
 import backend.ecommerce.ecommerce.entidades.Produto;
+import backend.ecommerce.ecommerce.repositorios.CategoriaRepositorio;
 import backend.ecommerce.ecommerce.repositorios.ProdutoRepositorio;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +22,8 @@ import lombok.RequiredArgsConstructor;
 public class ProdutosController {
 
     private final ProdutoRepositorio produtoRepositorio;
-
+    private final CategoriaRepositorio categoriaRepositorio;
+    
     @GetMapping
     public List<Produto> listarProdutos() {
         return produtoRepositorio.findAll();
@@ -35,5 +38,10 @@ public class ProdutosController {
     public ResponseEntity<List<Produto>> listarProdutosPorCategoria(@PathVariable("categoriaId") Long categoriaId) {
         List<Produto> produtos = produtoRepositorio.findByCategoriaId(categoriaId);
         return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/categorias")
+    public List<Categoria> listarCategoriasPublico() {
+        return categoriaRepositorio.findAll();
     }
 }

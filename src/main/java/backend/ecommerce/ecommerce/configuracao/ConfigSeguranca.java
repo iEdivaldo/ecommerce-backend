@@ -32,7 +32,7 @@ public class ConfigSeguranca {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(OPTIONS, "/**").permitAll()
-                .requestMatchers("/autenticacao/**", "/produtos/**", 
+                .requestMatchers("/autenticacao/**", "/produtos/**", "/categorias/**", 
                                 "/docs/**", "/error/**", "/error", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/administracao/**").hasAnyRole("ADMINISTRADOR", "SUPER_ADMIN")
