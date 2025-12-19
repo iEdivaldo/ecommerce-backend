@@ -19,9 +19,9 @@ git clone https://github.com/iEdivaldo/ecommerce-backend.git
 
 3.	Navega até a pasta do back-end utilizando comando:
 
-cd <caminho-da-pasta-do-back-end>
+cd "<caminho-da-pasta-do-back-end>"
 
-3.1.	OBS: Certifique que tenha virtualização ativado em seu PC para mais detalhes acesse o link:
+  3.1.	OBS: Certifique que tenha virtualização ativado em seu PC para mais detalhes acesse o link:
 
 https://docs.docker.com/desktop/setup/install/windows-install/
 
