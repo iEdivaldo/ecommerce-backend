@@ -1,6 +1,7 @@
 A aplicação está em dois links de github separados (front-end e back-end):
 
 front-end: https://github.com/iEdivaldo/ecommerce-frontend.
+
 back-end: https://github.com/iEdivaldo/ecommerce-backend.
 1.	Para executar a aplicação, deve ter: 
 Git
