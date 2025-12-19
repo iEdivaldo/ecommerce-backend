@@ -35,5 +35,6 @@ docker composse up –build
 DADOS DE LOGIN PARA ADMINISTRADOR (VENDEDOR/EMPREENDEDOR) E SUPER_ADMIN PARA ADMINISTRAR OS USUARIOS:
 
 Login ADMINISTRADOR: admin@exemplo.com senha: admin
+
 Login SUPER_ADMIN: superadmin@exemplo.com senha: admin
 OBS: Apenas SUPER_ADMIN pode cadastrar usuários ADMINISTRADOR. 
